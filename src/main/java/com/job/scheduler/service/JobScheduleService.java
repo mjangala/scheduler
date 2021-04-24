@@ -114,7 +114,7 @@ public class JobScheduleService {
     }
 
     public static Trigger buildJobTrigger(Schedule schedule) {
-        if (!StringUtils.isEmpty(schedule.getCron())) {
+        if (!StringUtils.hasLength(schedule.getCron())) {
             return TriggerBuilder.newTrigger()
                     .withIdentity(schedule.getJobName(), schedule.getJobGroup())
                     .withSchedule(CronScheduleBuilder
@@ -151,7 +151,7 @@ public class JobScheduleService {
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
-        return "Not Found";
+        return "No Job Found";
     }
 
     private String fetchScheduledJobStatus(String jobName) {
@@ -165,7 +165,7 @@ public class JobScheduleService {
     public String toggleSchedule(String jobName, boolean pause) {
         Schedule schedule = schedulerService.fetchJob(jobName);
         String result = jobName + "- ";
-        if (schedule == null) return result + "No such Job Found";
+        if (schedule == null) return result + "No Job Found";
         boolean pauseARunningJob = !schedule.isPause() && pause;
         boolean runAPausedJob = schedule.isPause() && !pause;
         if (pauseARunningJob) {
